@@ -1,0 +1,457 @@
+// DEVELOPED BY 
+	// ÁLEX CÁCERES
+	// ON 2018/02/17
+// LAST UPDATE 
+	// ON 2018/02/18
+
+/*
+-----------------------
+STYLES GUIDE:
+1. IMPORTS
+2. VARIABLES
+	2.1 COLORS
+	2.2 BACKGROUNDS
+	2.3 MEDIA QUERY
+	2.4 FONT-SIZE
+	2.5 PREFIXES 
+3. MIXINS
+	3.1 AUTO-PREFIXES
+	3.2 MEDIA QUERY
+4. RESET
+5. GENERICS
+6. CUSTOM
+7. MODULES
+	7.1 NAV
+	7.2 PROFILES
+	7.3 CHAT
+	7.4 TEXT BOX
+8. ELEMENTS
+9. SPECIFICS
+10. MEDIA QUERY
+-----------------
+*/
+
+/* -------- 1. IMPORTS -------- */
+	@import url(https://fonts.googleapis.com/css?family=Lato:100,300,400,700);
+	@import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css);
+
+/* -------- 2. VARIABLES -------- */
+	/* -------- 2.1 COLORS -------- */
+	$black: #000;
+		$softBlack: #636162;
+	$white: #fff;
+	$red: #ff0000;
+		$softRed: #FB4883;
+	$txtBtn: #D7D7D7;
+
+	/* -------- 2.2 BACKGROUNDS -------- */
+	$bgNeutral: #3C3C3C;
+	$bgBtnOn: #ff7b00;
+	$bgChat: #EDEBEC;
+		$bgSpeakerR: #54BAE2;
+		$bgSpeakerL: #fff;
+	$bgOn: #5AEC90;
+
+
+	/* -------- 2.3 MEDIA QUERY -------- */
+	$mobile-width: 320px;
+	$tablet-width: 768px;
+	$othrLands: landscape;
+
+	/* -------- 2.4 FONT-SIZE -------- */
+	$xtraSmall: .5rem;
+	$small: .8rem;
+	$medium: 1rem;
+	$big: 1.5rem;
+
+	/* -------- 2.5 PREFIXES -------- */
+	$prefixes: "webkit", "moz", "ms", "o", "none";
+
+/* -------- 3. MIXINS -------- */
+	/* -------- 3.1 AUTO-PREFIXES -------- */
+	/// Mixin to once properties
+	@mixin prefixSimple($property, $arguments) {
+		@each $prefix in $prefixes {
+			@if $prefix == "none" {
+				#{$property}: $arguments;
+			} @else {
+				-#{$prefix}-#{$property}: $arguments;
+			} 
+		}
+	}
+	/// Mixin to prefix several properties at once
+	@mixin prefixAdvance($declarations, $prefixes: ()) {
+		@each $property, $value in $declarations {
+		@each $prefix in $prefixes {
+			#{'-' + $prefix + '-' + $property}: $value;
+		}
+	
+		// Output standard non-prefixed declaration
+		#{$property}: $value;
+		}
+	}
+	/* -------- 3.2 MEDIA QUERY -------- */
+	@mixin mobile {
+		@media (min-width: #{$mobile-width}) and (max-width: #{$tablet-width - 1px}) {
+		@content;
+		}
+	}
+	@mixin mobileLandscape {
+		@media (min-width: #{$mobile-width}) and (max-width: #{$tablet-width - 1px}) and(orientation: $othrLands) {
+		@content;
+		}
+	}
+
+/* -------- 4. RESET -------- */
+	/* http://meyerweb.com/eric/tools/css/reset/ 
+	v2.0 | 20110126
+	License: none (public domain)
+	*/
+
+	html, body, div, span, applet, object, iframe,
+	h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+	a, abbr, acronym, address, big, cite, code,
+	del, dfn, em, img, ins, kbd, q, s, samp,
+	small, strike, strong, sub, sup, tt, var,
+	b, u, i, center,
+	dl, dt, dd, ol, ul, li,
+	fieldset, form, label, legend,
+	table, caption, tbody, tfoot, thead, tr, th, td,
+	article, aside, canvas, details, embed, 
+	figure, figcaption, footer, header, hgroup, 
+	menu, nav, output, ruby, section, summary,
+	time, mark, audio, video {
+		margin: 0;
+		padding: 0;
+		border: 0;
+		font-size: 100%;
+		font: inherit;
+		vertical-align: baseline;
+	}
+	// HTML5 display-role reset for older browsers
+	article, aside, details, figcaption, figure, 
+	footer, header, hgroup, menu, nav, section {
+		display: block;
+	}
+	body {
+		line-height: 1.5;
+		font-family: 'Roboto';
+		font-size: $big;
+
+		color: $softBlack;
+
+		background-color: $bgChat;
+
+		min-width: 100vw;
+		min-height: 100vh;
+
+	}
+	ol, ul {
+		list-style: none;
+	}
+	blockquote, q {
+		quotes: none;
+	}
+	blockquote:before, blockquote:after,
+	q:before, q:after {
+		content: '';
+		content: none;
+	}
+	table {
+		border-collapse: collapse;
+		border-spacing: 0;
+	}
+	// Defines Box Model
+	*, *:before, *:after {
+		box-sizing: inherit;
+	}
+	html {
+		box-sizing: border-box;
+	}
+
+/* --------- 5. GENERICS ----------- */
+	.mainContent {
+		background: $bgChat;
+
+		min-width: auto;
+		min-height: 92vh;
+
+		padding: 1rem;
+	}
+
+	.circle {
+		@include prefixAdvance((
+			border-radius: 50%,
+			background-size: cover,
+		), webkit moz o ms);
+		
+	}
+
+	.flex {
+		@include prefixAdvance((
+			display: flex,
+			flex-flow: row wrap,
+		), webkit moz o ms);
+	}
+
+	.avatarChat {
+		min-width: auto;
+
+		min-height: auto;
+		max-height: 2.5rem;
+	}
+
+	.msg {
+		font-size: $small;
+
+		width: 65vw;
+
+		padding: 1rem;
+	}
+
+	.btnFriendOn {
+		background-color: $white;
+	}
+	
+/* --------- 6. CUSTOM ----------- */
+	.cstm {
+		&.fa {
+			color: $white;
+			font-size: $big;
+		}
+		.right & {
+			@include prefixAdvance(( 
+				justify-content: flex-start,
+				order: 1,
+			), webkit moz o ms);
+		}
+		.left & {
+			@include prefixAdvance(( 
+				justify-content: flex-start,
+			), webkit moz o ms);
+		}
+		&.mainContent {
+			padding: 1rem 0;
+		}
+	}
+
+/* --------- 7. MODULES ----------- */
+	/* --------- 7.1 NAV ----------- */
+	.contnNav {
+		@include prefixAdvance(( 
+			display: flex,
+			flex-flow: row nowrap,
+			justify-content: center,
+		), webkit moz o ms);
+
+		background: $bgNeutral;
+		color: $white;
+
+		padding: 1% 3%;
+
+		font-size: $big;
+
+		min-width: auto;
+		min-height: 8vh;
+
+		.back {
+			color: $white;
+
+			font-size: 1.8rem;
+
+			min-width: auto;
+			min-height: auto;
+		}
+		.pannel {
+				@include prefixAdvance(( 
+				flex: 1 1 auto,
+			), webkit moz o ms);
+			
+			text-align: center;
+			align-self: center;
+			
+			min-width: auto;
+			min-height: auto;
+		}
+
+	}
+	/* --------- 7.2 PROFILES ----------- */
+	.contnAvatar {
+		@include prefixAdvance(( 
+			display: flex,
+			flex-flow: column wrap,
+			justify-content: flex-start,
+		), webkit moz o ms);
+
+		text-align: center;
+
+		min-width: auto;
+		min-height: auto;
+
+		.avatar {
+			@extend .circle;
+
+			@include prefixSimple(align-self, center);
+			width: 18rem;
+			height: auto;
+		}
+		
+		.status {
+			@extend .circle;
+
+			@include prefixSimple(align-self, flex-end);
+			position: absolute;
+
+			background: $bgOn;
+
+			color: $white;
+
+			font-size: $small;
+
+			padding: 1.8rem 1rem;
+		}
+	}
+
+	.contnInfoUser {
+		@include prefixAdvance(( 
+			display: flex,
+			flex-flow: column wrap,
+			justify-content: space-between,
+		), webkit moz o ms);
+		.row1 {
+			@include prefixSimple(flex-grow, 1);
+		}
+		.row2 {
+			font-size: $small;
+			color: $softRed;
+			width: 100%;
+		}
+		.row3 {
+			font-size: $medium;
+
+			margin: 1rem 0;
+		}
+	}
+
+	/* --------- 7.3 CHAT ----------- */
+	.chatHistory {
+		min-width: auto;
+		min-height: auto;
+
+		padding: 0 .5rem;
+
+		.right {
+			@include prefixAdvance(( 
+				display: flex,
+				flex-flow: row wrap,
+				justify-content: flex-end,
+			), webkit moz o ms);
+
+			margin-bottom: 2rem;
+
+			.chatBox {
+				@extend .msg;
+
+				@include prefixAdvance(( 
+					border-top-right-radius: initial,
+					border-top-left-radius: 5px,
+					border-bottom-right-radius: 5px,
+					border-bottom-left-radius: 5px,
+				), webkit moz o ms);
+
+				background-color: $bgSpeakerR;
+			}
+
+			.filigree {
+				@include prefixAdvance(( 
+					border-top: .5rem solid $bgSpeakerR,
+					border-right: .5rem solid transparent,
+					border-bottom: .5rem solid transparent,
+					border-left: .5rem solid $bgSpeakerR,
+				), webkit moz o ms);
+
+				width: 0;
+				height: 0;
+			}
+		}
+
+		.left {
+			@include prefixAdvance(( 
+				display: flex,
+				flex-flow: row wrap,
+				justify-content: flex-start,
+			), webkit moz o ms);
+	
+			margin-bottom: 2rem;
+
+			.chatBox {
+				@extend .msg;
+
+				@include prefixAdvance(( 
+					border-top-right-radius: 5px,
+					border-top-left-radius: initial,
+					border-bottom-right-radius: 5px,
+					border-bottom-left-radius: 5px,
+				), webkit moz o ms);
+
+				background-color: $bgSpeakerL;
+			}
+
+			.filigree {
+				@include prefixAdvance(( 
+					border-top: .5rem solid $bgSpeakerL,
+					border-right: .5rem solid $bgSpeakerL,
+					border-bottom: .5rem solid transparent,
+					border-left: .5rem solid transparent,
+				), webkit moz o ms);
+
+				width: 0;
+				height: 0;
+			}
+		}
+	}
+
+	/* --------- 7.4 TEXT BOX ----------- */
+	.textBox {
+		position: fixed;
+		width: 100vw;
+		bottom: 3%;
+		padding: 0 3%;
+	
+		.form {
+			input[type=text] {
+				width: 100%;
+				height: 2.5rem;
+				padding: .5rem 1rem; 
+			}
+		}
+	}
+
+/* -------- 8. ELEMENTS -------- */
+	.btnXL {
+		width: 100%;
+		height: auto;
+		
+		padding: 6% 25%;
+
+		color: $txtBtn;
+
+		background-color: $bgNeutral;
+		
+		&.on {
+			background-color: $bgBtnOn;
+		}
+	}
+
+/* -------- 9. SPECIFICS -------- */
+	.index {
+		@include prefixAdvance(( 
+			display: flex,
+			flex-flow: row wrap,
+			justify-content: center,
+		), webkit moz o ms);
+	}
+
+/* -------- 10. MEDIA QUERY -------- */
+
+
